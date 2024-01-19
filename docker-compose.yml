@@ -2,9 +2,9 @@ version: '2.2'
 
 services:
   openhab:
-    image: "openhab/openhab:4.1.1"
-    restart: always
-    network_mode: host
+    image: "openhab/openhab:4.0.4"
+    container_name: openhab
+    restart: unless-stopped
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
@@ -16,6 +16,14 @@ services:
       EXTRA_JAVA_OPTS: "-Duser.timezone=Europe/Berlin"
       OPENHAB_HTTP_PORT: "8080"
       OPENHAB_HTTPS_PORT: "8443"
+      VIRTUAL_PORT: "8080"
+      VIRTUAL_HOST: ""
+      LETSENCRYPT_HOST: ""
+      LETSENCRYPT_EMAIL: ""
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
 
 volumes:
   openhab_addons:
@@ -24,3 +32,8 @@ volumes:
     driver: local
   openhab_userdata:
     driver: local
+
+networks:
+ default:
+  external:
+    name: letsencrypt
