@@ -11,27 +11,16 @@ services:
       - "openhab_addons:/openhab/addons"
       - "openhab_conf:/openhab/conf"
       - "openhab_userdata:/openhab/userdata"
-    environment:
-      CRYPTO_POLICY: "unlimited"
-      EXTRA_JAVA_OPTS: "-Duser.timezone=Europe/Berlin"
-      OPENHAB_HTTP_PORT: "8080"
-      OPENHAB_HTTPS_PORT: "8443"
-      VIRTUAL_PORT: "8080"
-      VIRTUAL_HOST: ""
-      LETSENCRYPT_HOST: ""
-      LETSENCRYPT_EMAIL: ""
+    env_file:
+      - default.env
     ports:
       - "8080:8080"
-    expose:
-      - 8080
   influxdb:
     image: influxdb:2.7.4
     container_name: influxdb
     restart: unless-stopped
     ports:
       - '8086:8086'
-    expose:
-      - 8086
     volumes:
       - "influxdb_storage:/var/lib/influxdb"
   mosquitto:
@@ -40,10 +29,6 @@ services:
     restart: unless-stopped
     ports:
       - "1883:1883"
-      - "9001:9001"
-    expose:
-      - 1883
-      - 9001
     volumes:
       - "mosquitto_config:/mosquitto/config:rw"
       - "mosquitto_data:/mosquitto/data:rw"
